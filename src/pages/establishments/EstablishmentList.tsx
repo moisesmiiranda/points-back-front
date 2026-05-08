@@ -19,10 +19,7 @@ export default function EstablishmentList({ mode = 'list' }: Props) {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
-  const [filterName, setFilterName] = useState('');
-  const [filterEmail, setFilterEmail] = useState('');
-  const [filterPhone, setFilterPhone] = useState('');
-  const [filterCnpj, setFilterCnpj] = useState('');
+  const [filter, setFilter] = useState('');
   const [searchId, setSearchId] = useState('');
 
   useEffect(() => { loadItems(); }, []);
@@ -55,14 +52,15 @@ export default function EstablishmentList({ mode = 'list' }: Props) {
   };
 
   const filtered = useMemo(() => {
-    return items.filter((e) => {
-      if (filterName && !e.name.toLowerCase().includes(filterName.toLowerCase())) return false;
-      if (filterEmail && !e.email.toLowerCase().includes(filterEmail.toLowerCase())) return false;
-      if (filterPhone && !e.phone.includes(filterPhone)) return false;
-      if (filterCnpj && !e.cnpj.includes(filterCnpj)) return false;
-      return true;
-    });
-  }, [items, filterName, filterEmail, filterPhone, filterCnpj]);
+    if (!filter) return items;
+    const lowerFilter = filter.toLowerCase();
+    return items.filter((e) =>
+      e.name.toLowerCase().includes(lowerFilter) ||
+      e.email.toLowerCase().includes(lowerFilter) ||
+      e.phone.includes(filter) ||
+      e.cnpj.includes(filter)
+    );
+  }, [items, filter]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -106,15 +104,15 @@ export default function EstablishmentList({ mode = 'list' }: Props) {
             <button className="btn btn-secondary btn-sm" onClick={() => { setSearchId(''); loadItems(); }}>Limpar</button>
           </div>
 
-          <div className="filters-bar">
-            <input className="form-input" placeholder="Filtrar por nome..." value={filterName}
-              onChange={(e) => { setFilterName(e.target.value); setPage(1); }} />
-            <input className="form-input" placeholder="Filtrar por email..." value={filterEmail}
-              onChange={(e) => { setFilterEmail(e.target.value); setPage(1); }} />
-            <input className="form-input" placeholder="Filtrar por telefone..." value={filterPhone}
-              onChange={(e) => { setFilterPhone(e.target.value); setPage(1); }} />
-            <input className="form-input" placeholder="Filtrar por CNPJ..." value={filterCnpj}
-              onChange={(e) => { setFilterCnpj(e.target.value); setPage(1); }} />
+          <div className="filters-bar" style={{ display: 'block' }}>
+            <label className="form-label">Filtrar por nome, email, telefone ou CNPJ</label>
+            <input
+              className="form-input"
+              style={{ width: '100%', maxWidth: '100%' }}
+              placeholder="Digite o nome, email, telefone ou CNPJ do estabelecimento..."
+              value={filter}
+              onChange={(e) => { setFilter(e.target.value); setPage(1); }}
+            />
           </div>
 
           {filtered.length === 0 ? (
@@ -134,7 +132,7 @@ export default function EstablishmentList({ mode = 'list' }: Props) {
                       <th>Telefone</th>
                       <th>CNPJ</th>
                       <th>R$/Ponto</th>
-                      {mode === 'edit' && <th>Ações</th>}
+                      <th>Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -146,15 +144,15 @@ export default function EstablishmentList({ mode = 'list' }: Props) {
                         <td>{e.phone}</td>
                         <td>{e.cnpj}</td>
                         <td>{e.valuePerPoint ?? '—'}</td>
-                        {mode === 'edit' && (
-                          <td className="actions">
-                            <button className="btn btn-primary btn-sm"
-                              disabled={e.id == null}
-                              onClick={() => navigate(`/editar/estabelecimentos/${e.id}`)}>
-                              ✏️ Editar
-                            </button>
-                          </td>
-                        )}
+                        <td className="actions">
+                          <button
+                            className="btn btn-primary btn-sm"
+                            disabled={e.id == null}
+                            onClick={() => navigate(`/editar/estabelecimentos/${e.id}`)}
+                          >
+                            ✏️ Editar
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

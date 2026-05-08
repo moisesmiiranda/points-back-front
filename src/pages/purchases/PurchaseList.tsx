@@ -23,10 +23,7 @@ export default function PurchaseList({ mode = 'list' }: Props) {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
-  const [filterClientId, setFilterClientId] = useState('');
-  const [filterEstId, setFilterEstId] = useState('');
-  const [filterAmountMin, setFilterAmountMin] = useState('');
-  const [filterAmountMax, setFilterAmountMax] = useState('');
+  const [filter, setFilter] = useState('');
   const [searchId, setSearchId] = useState('');
 
   useEffect(() => { loadData(); }, []);
@@ -69,15 +66,14 @@ export default function PurchaseList({ mode = 'list' }: Props) {
   };
 
   const filtered = useMemo(() => {
+    if (!filter) return items;
+    const lowerFilter = filter.toLowerCase();
     return items.filter((p) => {
-      if (filterClientId && p.clientId !== parseInt(filterClientId)) return false;
-      if (filterEstId && p.establishmentId !== parseInt(filterEstId)) return false;
-      const amt = parseFloat(String(p.amount)) || 0;
-      if (filterAmountMin && amt < parseFloat(filterAmountMin)) return false;
-      if (filterAmountMax && amt > parseFloat(filterAmountMax)) return false;
-      return true;
+      const clientName = (clients.get(p.clientId) || '').toLowerCase();
+      const estName = (establishments.get(p.establishmentId) || '').toLowerCase();
+      return clientName.includes(lowerFilter) || estName.includes(lowerFilter);
     });
-  }, [items, filterClientId, filterEstId, filterAmountMin, filterAmountMax]);
+  }, [items, filter, clients, establishments]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -121,15 +117,15 @@ export default function PurchaseList({ mode = 'list' }: Props) {
             <button className="btn btn-secondary btn-sm" onClick={() => { setSearchId(''); loadData(); }}>Limpar</button>
           </div>
 
-          <div className="filters-bar">
-            <input className="form-input" placeholder="Client ID..." type="number" value={filterClientId}
-              onChange={(e) => { setFilterClientId(e.target.value); setPage(1); }} />
-            <input className="form-input" placeholder="Establishment ID..." type="number" value={filterEstId}
-              onChange={(e) => { setFilterEstId(e.target.value); setPage(1); }} />
-            <input className="form-input" placeholder="Valor mín..." type="number" step="0.01" value={filterAmountMin}
-              onChange={(e) => { setFilterAmountMin(e.target.value); setPage(1); }} />
-            <input className="form-input" placeholder="Valor máx..." type="number" step="0.01" value={filterAmountMax}
-              onChange={(e) => { setFilterAmountMax(e.target.value); setPage(1); }} />
+          <div className="filters-bar" style={{ display: 'block' }}>
+            <label className="form-label">Filtrar por nome do cliente ou estabelecimento</label>
+            <input
+              className="form-input"
+              style={{ width: '100%', maxWidth: '100%' }}
+              placeholder="Digite o nome do cliente ou do estabelecimento..."
+              value={filter}
+              onChange={(e) => { setFilter(e.target.value); setPage(1); }}
+            />
           </div>
 
           {filtered.length === 0 ? (
@@ -147,7 +143,7 @@ export default function PurchaseList({ mode = 'list' }: Props) {
                       <th>Cliente</th>
                       <th>Estabelecimento</th>
                       <th>Valor (R$)</th>
-                      {mode === 'edit' && <th>Ações</th>}
+                      <th>Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -157,15 +153,15 @@ export default function PurchaseList({ mode = 'list' }: Props) {
                         <td>{clients.get(p.clientId) || `#${p.clientId}`}</td>
                         <td>{establishments.get(p.establishmentId) || `#${p.establishmentId}`}</td>
                         <td>R$ {parseFloat(String(p.amount)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                        {mode === 'edit' && (
-                          <td className="actions">
-                            <button className="btn btn-primary btn-sm"
-                              disabled={p.purchaseId == null}
-                              onClick={() => navigate(`/editar/compras/${p.purchaseId}`)}>
-                              ✏️ Editar
-                            </button>
-                          </td>
-                        )}
+                        <td className="actions">
+                          <button
+                            className="btn btn-primary btn-sm"
+                            disabled={p.purchaseId == null}
+                            onClick={() => navigate(`/editar/compras/${p.purchaseId}`)}
+                          >
+                            ✏️ Editar
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
