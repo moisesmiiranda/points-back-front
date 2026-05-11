@@ -43,6 +43,7 @@ export default function ClientEdit() {
     if (!form.email.trim()) errs.email = 'Email é obrigatório';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Email inválido';
     if (!form.phone.trim()) errs.phone = 'Telefone é obrigatório';
+    else if (form.phone.replace(/\D/g, '').length < 11) errs.phone = 'Telefone deve ter no mínimo 11 dígitos';
     if (!form.cpf.trim()) errs.cpf = 'CPF é obrigatório';
     setErrors(errs);
     return Object.keys(errs).length === 0;

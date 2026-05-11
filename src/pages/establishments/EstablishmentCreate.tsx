@@ -17,6 +17,7 @@ export default function EstablishmentCreate() {
     if (!form.email.trim()) errs.email = 'Email é obrigatório';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Email inválido';
     if (!form.phone.trim()) errs.phone = 'Telefone é obrigatório';
+    else if (form.phone.replace(/\D/g, '').length < 11) errs.phone = 'Telefone deve ter no mínimo 11 dígitos';
     if (!form.cnpj.trim()) errs.cnpj = 'CNPJ é obrigatório';
     else if (!/^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}$/.test(form.cnpj))
       errs.cnpj = 'CNPJ inválido (ex: 12.345.678/0001-90)';
@@ -58,57 +59,53 @@ export default function EstablishmentCreate() {
         <p>Preencha os dados para criar um novo estabelecimento</p>
       </div>
 
-      <div className="card form-container">
+      <div className="card">
         <form onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">Nome *</label>
-              <input
-                id="est-name"
-                className="form-input"
-                placeholder="Nome do estabelecimento"
-                value={form.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-              />
-              {errors.name && <div className="form-error">⚠ {errors.name}</div>}
-            </div>
-            <div className="form-group">
-              <label className="form-label">Email *</label>
-              <input
-                id="est-email"
-                className="form-input"
-                type="email"
-                placeholder="contato@empresa.com"
-                value={form.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-              />
-              {errors.email && <div className="form-error">⚠ {errors.email}</div>}
-            </div>
+          <div className="form-group">
+            <label className="form-label">Nome *</label>
+            <input
+              id="est-name"
+              className="form-input"
+              placeholder="Nome do estabelecimento"
+              value={form.name}
+              onChange={(e) => handleChange('name', e.target.value)}
+            />
+            {errors.name && <div className="form-error">⚠ {errors.name}</div>}
+          </div>
+          <div className="form-group">
+            <label className="form-label">Email *</label>
+            <input
+              id="est-email"
+              className="form-input"
+              type="email"
+              placeholder="contato@empresa.com"
+              value={form.email}
+              onChange={(e) => handleChange('email', e.target.value)}
+            />
+            {errors.email && <div className="form-error">⚠ {errors.email}</div>}
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">Telefone *</label>
-              <input
-                id="est-phone"
-                className="form-input"
-                placeholder="(00) 0000-0000"
-                value={form.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-              />
-              {errors.phone && <div className="form-error">⚠ {errors.phone}</div>}
-            </div>
-            <div className="form-group">
-              <label className="form-label">CNPJ *</label>
-              <input
-                id="est-cnpj"
-                className="form-input"
-                placeholder="12.345.678/0001-90"
-                value={form.cnpj}
-                onChange={(e) => handleChange('cnpj', e.target.value)}
-              />
-              {errors.cnpj && <div className="form-error">⚠ {errors.cnpj}</div>}
-            </div>
+          <div className="form-group">
+            <label className="form-label">Telefone *</label>
+            <input
+              id="est-phone"
+              className="form-input"
+              placeholder="(00) 0000-0000"
+              value={form.phone}
+              onChange={(e) => handleChange('phone', e.target.value)}
+            />
+            {errors.phone && <div className="form-error">⚠ {errors.phone}</div>}
+          </div>
+          <div className="form-group">
+            <label className="form-label">CNPJ *</label>
+            <input
+              id="est-cnpj"
+              className="form-input"
+              placeholder="12.345.678/0001-90"
+              value={form.cnpj}
+              onChange={(e) => handleChange('cnpj', e.target.value)}
+            />
+            {errors.cnpj && <div className="form-error">⚠ {errors.cnpj}</div>}
           </div>
 
           <div className="form-group">

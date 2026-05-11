@@ -41,6 +41,7 @@ export default function EstablishmentEdit() {
     if (!form.email.trim()) errs.email = 'Email é obrigatório';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Email inválido';
     if (!form.phone.trim()) errs.phone = 'Telefone é obrigatório';
+    else if (form.phone.replace(/\D/g, '').length < 11) errs.phone = 'Telefone deve ter no mínimo 11 dígitos';
     if (!form.cnpj.trim()) errs.cnpj = 'CNPJ é obrigatório';
     if (form.valuePerPoint !== undefined && form.valuePerPoint <= 0)
       errs.valuePerPoint = 'Valor por ponto deve ser > 0';
