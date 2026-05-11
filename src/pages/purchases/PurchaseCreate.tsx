@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { purchaseService } from '../../services/purchaseService';
 import { clientService } from '../../services/clientService';
 import { establishmentService } from '../../services/establishmentService';
@@ -6,6 +7,7 @@ import { useToast } from '../../components/Toast';
 import type { PurchaseDto, ClientDto, EstablishmentDto } from '../../types';
 
 export default function PurchaseCreate() {
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [clients, setClients] = useState<ClientDto[]>([]);
@@ -53,6 +55,17 @@ export default function PurchaseCreate() {
     setShowEstablishmentResults(true);
   };
 
+  const handleCancel = () => {
+    setForm({ clientId: 0, establishmentId: 0, amount: '' });
+    setClientSearchText('');
+    setAppliedClientFilter('');
+    setShowClientResults(false);
+    setEstablishmentSearchText('');
+    setAppliedEstablishmentFilter('');
+    setShowEstablishmentResults(false);
+    setErrors({});
+  };
+
   useEffect(() => {
     Promise.all([clientService.getAll(), establishmentService.getAll()])
       .then(([cRes, eRes]) => {
@@ -94,7 +107,7 @@ export default function PurchaseCreate() {
         <p>Registre uma nova compra. Os pontos do cliente serão atualizados automaticamente.</p>
       </div>
 
-      <div className="card form-container">
+      <div className="card">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">Cliente *</label>
@@ -109,48 +122,68 @@ export default function PurchaseCreate() {
               />
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="btn btn-primary btn-sm"
                 onClick={handleSearchClient}
               >
-                Pesquisar cliente
+                🔍 Buscar
               </button>
             </div>
-            
+
             {showClientResults && (
-              <div style={{ border: '1px solid #ddd', borderRadius: '4px', maxHeight: '150px', overflowY: 'auto', marginBottom: '8px' }}>
-                {filteredClients.length === 0 ? (
-                  <div style={{ padding: '8px', color: '#666' }}>Nenhum cliente encontrado.</div>
-                ) : (
-                  filteredClients.map((c) => (
-                    <div
-                      key={c.id}
-                      onClick={() => {
-                        setForm((prev) => ({ ...prev, clientId: c.id || 0 }));
-                        if (errors.clientId) setErrors((prev) => ({ ...prev, clientId: '' }));
-                        setShowClientResults(false);
-                      }}
-                      style={{
-                        padding: '8px',
-                        cursor: 'pointer',
-                        borderBottom: '1px solid #eee',
-                        backgroundColor: form.clientId === c.id ? '#e6f7ff' : '#fff',
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = form.clientId === c.id ? '#e6f7ff' : '#fff'}
-                    >
-                      {c.name} — CPF: {c.cpf}
-                    </div>
-                  ))
-                )}
+              <div className="table-container" style={{ marginBottom: '16px' }}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Telefone</th>
+                      <th>CPF</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredClients.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>
+                          Nenhum cliente encontrado.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredClients.map((c) => (
+                        <tr key={c.id}>
+                          <td>{c.id ?? '—'}</td>
+                          <td>{c.name}</td>
+                          <td>{c.email}</td>
+                          <td>{c.phone}</td>
+                          <td>{c.cpf}</td>
+                          <td className="actions">
+                            <button
+                              type="button"
+                              className={`btn ${form.clientId === c.id ? 'btn-success' : 'btn-primary'} btn-sm`}
+                              onClick={() => {
+                                setForm((prev) => ({ ...prev, clientId: c.id || 0 }));
+                                if (errors.clientId) setErrors((prev) => ({ ...prev, clientId: '' }));
+                                setShowClientResults(false);
+                              }}
+                            >
+                              {form.clientId === c.id ? '✓ Selecionado' : 'Selecionar'}
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
               </div>
             )}
-            
+
             {form.clientId !== 0 && (
-              <div style={{ padding: '8px', backgroundColor: '#e6f7ff', border: '1px solid #1890ff', borderRadius: '4px', marginBottom: '8px', color: '#0050b3' }}>
+              <div style={{ padding: '8px', backgroundColor: 'rgba(108, 92, 231, 0.15)', border: '1px solid var(--accent-primary)', borderRadius: '4px', marginBottom: '8px', color: 'var(--text-primary)' }}>
                 ✓ Cliente Selecionado: <strong>{clients.find(c => c.id === form.clientId)?.name}</strong>
               </div>
             )}
-            
+
             {errors.clientId && <div className="form-error">⚠ {errors.clientId}</div>}
           </div>
 
@@ -167,44 +200,66 @@ export default function PurchaseCreate() {
               />
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="btn btn-primary btn-sm"
                 onClick={handleSearchEstablishment}
               >
-                Pesquisar estabelecimento
+                🔍 Buscar
               </button>
             </div>
-            
+
             {showEstablishmentResults && (
-              <div style={{ border: '1px solid #ddd', borderRadius: '4px', maxHeight: '150px', overflowY: 'auto', marginBottom: '8px' }}>
-                {filteredEstablishments.length === 0 ? (
-                  <div style={{ padding: '8px', color: '#666' }}>Nenhum estabelecimento encontrado.</div>
-                ) : (
-                  filteredEstablishments.map((e) => (
-                    <div
-                      key={e.id}
-                      onClick={() => {
-                        setForm((prev) => ({ ...prev, establishmentId: e.id || 0 }));
-                        if (errors.establishmentId) setErrors((prev) => ({ ...prev, establishmentId: '' }));
-                        setShowEstablishmentResults(false);
-                      }}
-                      style={{
-                        padding: '8px',
-                        cursor: 'pointer',
-                        borderBottom: '1px solid #eee',
-                        backgroundColor: form.establishmentId === e.id ? '#e6f7ff' : '#fff',
-                      }}
-                      onMouseEnter={(evt) => evt.currentTarget.style.backgroundColor = '#f5f5f5'}
-                      onMouseLeave={(evt) => evt.currentTarget.style.backgroundColor = form.establishmentId === e.id ? '#e6f7ff' : '#fff'}
-                    >
-                      {e.name} — CNPJ: {e.cnpj}
-                    </div>
-                  ))
-                )}
+              <div className="table-container" style={{ marginBottom: '16px' }}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Telefone</th>
+                      <th>CNPJ</th>
+                      <th>R$/Ponto</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredEstablishments.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>
+                          Nenhum estabelecimento encontrado.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredEstablishments.map((e) => (
+                        <tr key={e.id}>
+                          <td>{e.id ?? '—'}</td>
+                          <td>{e.name}</td>
+                          <td>{e.email}</td>
+                          <td>{e.phone}</td>
+                          <td>{e.cnpj}</td>
+                          <td>{e.valuePerPoint ?? '—'}</td>
+                          <td className="actions">
+                            <button
+                              type="button"
+                              className={`btn ${form.establishmentId === e.id ? 'btn-success' : 'btn-primary'} btn-sm`}
+                              onClick={() => {
+                                setForm((prev) => ({ ...prev, establishmentId: e.id || 0 }));
+                                if (errors.establishmentId) setErrors((prev) => ({ ...prev, establishmentId: '' }));
+                                setShowEstablishmentResults(false);
+                              }}
+                            >
+                              {form.establishmentId === e.id ? '✓ Selecionado' : 'Selecionar'}
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
               </div>
             )}
-            
+
             {form.establishmentId !== 0 && (
-              <div style={{ padding: '8px', backgroundColor: '#e6f7ff', border: '1px solid #1890ff', borderRadius: '4px', marginBottom: '8px', color: '#0050b3' }}>
+              <div style={{ padding: '8px', backgroundColor: 'rgba(108, 92, 231, 0.15)', border: '1px solid var(--accent-primary)', borderRadius: '4px', marginBottom: '8px', color: 'var(--text-primary)' }}>
                 ✓ Estabelecimento Selecionado: <strong>{establishments.find(e => e.id === form.establishmentId)?.name}</strong>
               </div>
             )}
@@ -233,6 +288,20 @@ export default function PurchaseCreate() {
           <div className="btn-group">
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? 'Registrando...' : '✓ Registrar Compra'}
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-secondary" 
+              onClick={handleCancel}
+            >
+              ✗ Cancelar
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-danger" 
+              onClick={() => navigate('/')}
+            >
+              🚪 Sair
             </button>
           </div>
         </form>
