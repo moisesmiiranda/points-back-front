@@ -16,14 +16,6 @@ const groups: SidebarGroup[] = [
     ],
   },
   {
-    label: 'Editar',
-    items: [
-      { label: 'Clientes', path: '/editar/clientes', icon: '✏️' },
-      { label: 'Estabelecimentos', path: '/editar/estabelecimentos', icon: '✏️' },
-      { label: 'Compras', path: '/editar/compras', icon: '✏️' },
-    ],
-  },
-  {
     label: 'Apagar',
     items: [
       { label: 'Clientes', path: '/apagar/clientes', icon: '🗑️' },

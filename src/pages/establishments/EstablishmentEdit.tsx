@@ -29,7 +29,7 @@ export default function EstablishmentEdit() {
       setForm(res.data);
     } catch {
       showToast('Estabelecimento não encontrado', 'error');
-      navigate('/editar/estabelecimentos');
+      navigate('/listagens/estabelecimentos');
     } finally {
       setLoading(false);
     }
@@ -147,7 +147,7 @@ export default function EstablishmentEdit() {
               {saving ? 'Salvando...' : '✓ Salvar Alterações'}
             </button>
             <button type="button" className="btn btn-secondary"
-              onClick={() => navigate('/editar/estabelecimentos')}>← Voltar</button>
+              onClick={() => navigate('/listagens/estabelecimentos')}>← Voltar</button>
           </div>
         </form>
       </div>

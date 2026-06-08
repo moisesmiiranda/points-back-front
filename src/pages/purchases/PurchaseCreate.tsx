@@ -101,7 +101,7 @@ export default function PurchaseCreate() {
   };
 
   return (
-    <div className="page-enter">
+    <div className="page-enter" style={{ marginRight: '280px' }}>
       <div className="page-header">
         <h2>Registrar Compra</h2>
         <p>Registre uma nova compra. Os pontos do cliente serão atualizados automaticamente.</p>

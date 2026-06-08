@@ -45,7 +45,7 @@ export default function ClientCreate() {
   };
 
   return (
-    <div className="page-enter">
+    <div className="page-enter" style={{ marginRight: '280px' }}>
       <div className="page-header">
         <h2>Cadastrar Cliente</h2>
         <p>Preencha os dados para criar um novo cliente</p>

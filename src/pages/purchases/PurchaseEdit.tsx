@@ -37,7 +37,7 @@ export default function PurchaseEdit() {
       setEstablishments(eRes.data);
     } catch {
       showToast('Compra não encontrada', 'error');
-      navigate('/editar/compras');
+      navigate('/listagens/compras');
     } finally {
       setLoading(false);
     }
@@ -156,7 +156,7 @@ export default function PurchaseEdit() {
             <button type="submit" className="btn btn-primary" disabled={saving}>
               {saving ? 'Salvando...' : '✓ Salvar Alterações'}
             </button>
-            <button type="button" className="btn btn-secondary" onClick={() => navigate('/editar/compras')}>
+            <button type="button" className="btn btn-secondary" onClick={() => navigate('/listagens/compras')}>
               ← Voltar
             </button>
           </div>

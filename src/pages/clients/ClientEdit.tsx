@@ -31,7 +31,7 @@ export default function ClientEdit() {
       setForm(res.data);
     } catch {
       showToast('Cliente não encontrado', 'error');
-      navigate('/editar/clientes');
+      navigate('/listagens/clientes');
     } finally {
       setLoading(false);
     }

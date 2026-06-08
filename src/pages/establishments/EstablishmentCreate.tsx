@@ -53,7 +53,7 @@ export default function EstablishmentCreate() {
   };
 
   return (
-    <div className="page-enter">
+    <div className="page-enter" style={{ marginRight: '280px' }}>
       <div className="page-header">
         <h2>Cadastrar Estabelecimento</h2>
         <p>Preencha os dados para criar um novo estabelecimento</p>

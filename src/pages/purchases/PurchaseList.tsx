@@ -22,9 +22,7 @@ export default function PurchaseList({ mode = 'list' }: Props) {
   const [establishments, setEstablishments] = useState<Map<number, string>>(new Map());
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-
   const [filter, setFilter] = useState('');
-  const [searchId, setSearchId] = useState('');
 
   useEffect(() => { loadData(); }, []);
 
@@ -45,21 +43,6 @@ export default function PurchaseList({ mode = 'list' }: Props) {
       setEstablishments(eMap);
     } catch {
       showToast('Erro ao carregar compras', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearchById = async () => {
-    if (!searchId.trim()) return;
-    setLoading(true);
-    try {
-      const res = await purchaseService.getById(parseInt(searchId));
-      setItems([res.data]);
-      setPage(1);
-    } catch {
-      showToast('Compra não encontrada', 'error');
-      setItems([]);
     } finally {
       setLoading(false);
     }
@@ -87,7 +70,7 @@ export default function PurchaseList({ mode = 'list' }: Props) {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="page-enter">
+    <div className="page-enter" style={{ marginRight: '280px' }}>
       <div className="page-header">
         <h2>{titles[mode].title}</h2>
         <p>{titles[mode].desc}</p>
@@ -106,23 +89,12 @@ export default function PurchaseList({ mode = 'list' }: Props) {
 
       {mode !== 'delete' && (
         <>
-          <div className="id-search">
-            <div className="form-group">
-              <label className="form-label">Buscar por ID</label>
-              <input className="form-input" placeholder="ID" type="number" value={searchId}
-                onChange={(e) => setSearchId(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearchById()} />
-            </div>
-            <button className="btn btn-primary btn-sm" onClick={handleSearchById}>🔍 Buscar</button>
-            <button className="btn btn-secondary btn-sm" onClick={() => { setSearchId(''); loadData(); }}>Limpar</button>
-          </div>
-
-          <div className="filters-bar" style={{ display: 'block' }}>
-            <label className="form-label">Filtrar por nome do cliente ou estabelecimento</label>
+          <div className="search-panel card">
+            <div className="search-panel-title">🔍 Buscar Compras</div>
             <input
               className="form-input"
-              style={{ width: '100%', maxWidth: '100%' }}
-              placeholder="Digite o nome do cliente ou do estabelecimento..."
+              style={{ width: '100%' }}
+              placeholder="Pesquisar por nome do cliente ou estabelecimento..."
               value={filter}
               onChange={(e) => { setFilter(e.target.value); setPage(1); }}
             />
@@ -154,6 +126,13 @@ export default function PurchaseList({ mode = 'list' }: Props) {
                         <td>{establishments.get(p.establishmentId) || `#${p.establishmentId}`}</td>
                         <td>R$ {parseFloat(String(p.amount)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                         <td className="actions">
+                          <button
+                            className="btn btn-outline btn-sm"
+                            disabled={p.purchaseId == null}
+                            onClick={() => navigate(`/listagens/compras/${p.purchaseId}`)}
+                          >
+                            🔎 Detalhes
+                          </button>
                           <button
                             className="btn btn-primary btn-sm"
                             disabled={p.purchaseId == null}

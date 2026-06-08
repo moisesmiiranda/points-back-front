@@ -18,10 +18,7 @@ export default function ClientList({ mode = 'list' }: Props) {
   const [clients, setClients] = useState<ClientDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-
-  // Filters
   const [filter, setFilter] = useState('');
-  const [searchId, setSearchId] = useState('');
 
   useEffect(() => {
     loadClients();
@@ -34,21 +31,6 @@ export default function ClientList({ mode = 'list' }: Props) {
       setClients(res.data);
     } catch {
       showToast('Erro ao carregar clientes', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearchById = async () => {
-    if (!searchId.trim()) return;
-    setLoading(true);
-    try {
-      const res = await clientService.getById(parseInt(searchId));
-      setClients([res.data]);
-      setPage(1);
-    } catch {
-      showToast('Cliente não encontrado', 'error');
-      setClients([]);
     } finally {
       setLoading(false);
     }
@@ -77,7 +59,7 @@ export default function ClientList({ mode = 'list' }: Props) {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="page-enter">
+    <div className="page-enter" style={{ marginRight: '280px' }}>
       <div className="page-header">
         <h2>{titles[mode].title}</h2>
         <p>{titles[mode].desc}</p>
@@ -97,38 +79,12 @@ export default function ClientList({ mode = 'list' }: Props) {
 
       {mode !== 'delete' && (
         <>
-          <div className="id-search">
-            <div className="form-group">
-              <label className="form-label">Buscar por ID</label>
-              <input
-                className="form-input"
-                placeholder="ID"
-                type="number"
-                value={searchId}
-                onChange={(e) => setSearchId(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearchById()}
-              />
-            </div>
-            <button className="btn btn-primary btn-sm" onClick={handleSearchById}>
-              🔍 Buscar
-            </button>
-            <button
-              className="btn btn-secondary btn-sm"
-              onClick={() => {
-                setSearchId('');
-                loadClients();
-              }}
-            >
-              Limpar
-            </button>
-          </div>
-
-          <div className="filters-bar" style={{ display: 'block' }}>
-            <label className="form-label">Filtrar por nome, email, telefone ou CPF</label>
+          <div className="search-panel card">
+            <div className="search-panel-title">🔍 Buscar Clientes</div>
             <input
               className="form-input"
-              style={{ width: '100%', maxWidth: '100%' }}
-              placeholder="Digite o nome, email, telefone ou CPF do cliente..."
+              style={{ width: '100%' }}
+              placeholder="Pesquisar por nome, email, telefone ou CPF..."
               value={filter}
               onChange={(e) => { setFilter(e.target.value); setPage(1); }}
             />
@@ -164,6 +120,13 @@ export default function ClientList({ mode = 'list' }: Props) {
                         <td>{c.cpf}</td>
                         <td>{c.points ?? 0}</td>
                         <td className="actions">
+                          <button
+                            className="btn btn-outline btn-sm"
+                            disabled={c.id == null}
+                            onClick={() => navigate(`/listagens/clientes/${c.id}`)}
+                          >
+                            🔎 Detalhes
+                          </button>
                           <button
                             className="btn btn-primary btn-sm"
                             disabled={c.id == null}
