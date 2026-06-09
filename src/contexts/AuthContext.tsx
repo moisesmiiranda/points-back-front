@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { decodeBase64Json } from '../utils/jwtUtils';
-import api from '../services/api';
+import { authService } from '../services/authService';
 
 interface AuthState {
   token: string | null;
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [token]);
 
   const login = async (usernameIn: string, password: string) => {
-    const resp = await api.post('/auth/login', { username: usernameIn, password });
+    const resp = await authService.login({ username: usernameIn, password });
     const maybeToken = resp.data?.token ?? resp.data?.accessToken ?? resp.data;
     if (!maybeToken || typeof maybeToken !== 'string') throw new Error('Token not returned');
     localStorage.setItem(TOKEN_KEY, maybeToken);

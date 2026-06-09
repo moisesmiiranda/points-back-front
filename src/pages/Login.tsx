@@ -1,4 +1,5 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -95,9 +96,11 @@ export default function Login() {
             />
             Lembrar senha
           </label>
-          <Link to="/forgot" className="login-forgot-link">
-            Esqueci a senha
-          </Link>
+          <div className="login-links">
+            <Link to="/forgot" className="login-forgot-link">
+              Esqueci a senha
+            </Link>
+          </div>
         </div>
 
         <button type="submit" disabled={!canSubmit} className="btn-primary login-submit">

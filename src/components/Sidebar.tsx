@@ -85,6 +85,15 @@ export default function Sidebar() {
                   {item.label}
                 </NavLink>
               ))}
+              {group.label === 'Cadastros' && auth.username === 'root' && (
+                <NavLink
+                  to="/cadastros/usuarios"
+                  className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+                >
+                  <span className="icon">🧑‍💼</span>
+                  Usuários
+                </NavLink>
+              )}
             </div>
           </div>
         ))}

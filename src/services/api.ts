@@ -11,6 +11,11 @@ const api = axios.create({
 // Attach token from localStorage for protected requests
 api.interceptors.request.use((config) => {
   try {
+    const publicPaths = ['/auth/login', '/auth/register'];
+    if (config.url && publicPaths.some((path) => config.url?.includes(path))) {
+      return config;
+    }
+
     const token = localStorage.getItem('app_token');
     if (token && config.headers) {
       config.headers['Authorization'] = `Bearer ${token}`;

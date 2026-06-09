@@ -22,3 +22,19 @@ export interface PurchaseDto {
   establishmentId: number;
   amount: string;
 }
+
+export interface UserAccountDto {
+  username: string;
+  password: string;
+  name: string;
+  cpf: string;
+  phone: string;
+  street: string;
+  number: string;
+  neighborhood: string;
+  city: string;
+  cep: string;
+  email: string;
+  birthDate: string;
+  permissions: string[];
+}

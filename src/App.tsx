@@ -5,6 +5,7 @@ import { ToastProvider } from './components/Toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ClientCreate from './pages/clients/ClientCreate';
 import ClientList from './pages/clients/ClientList';
@@ -18,6 +19,7 @@ import PurchaseCreate from './pages/purchases/PurchaseCreate';
 import PurchaseList from './pages/purchases/PurchaseList';
 import PurchaseEdit from './pages/purchases/PurchaseEdit';
 import PurchaseDetails from './pages/purchases/PurchaseDetails';
+import UserRegister from './pages/UserRegister';
 
 function App() {
   function AppContent() {
@@ -56,6 +58,7 @@ function App() {
           )}
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
             <Route element={<PrivateRoute />}>
               <Route path="/" element={<Dashboard />} />
@@ -82,6 +85,7 @@ function App() {
               <Route path="/listagens/estabelecimentos/:id" element={<EstablishmentDetails />} />
               <Route path="/listagens/compras" element={<PurchaseList mode="list" />} />
               <Route path="/listagens/compras/:id" element={<PurchaseDetails />} />
+              <Route path="/cadastros/usuarios" element={<UserRegister />} />
             </Route>
           </Routes>
         </main>
