@@ -91,18 +91,6 @@ export default function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <div className="sidebar-user">
-          <div className="username">{auth.username ?? '—'}</div>
-          <button
-            className="logout-btn"
-            onClick={() => {
-              auth.logout();
-              window.location.href = '/login';
-            }}
-          >
-            Sair
-          </button>
-        </div>
         <button className="theme-toggle-btn" onClick={toggleTheme}>
           {theme === 'dark' ? '☀️ Tema Claro' : '🌙 Tema Escuro'}
         </button>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeContext';
 import Sidebar from './components/Sidebar';
 import { ToastProvider } from './components/Toast';
@@ -22,12 +22,38 @@ import PurchaseDetails from './pages/purchases/PurchaseDetails';
 function App() {
   function AppContent() {
     const auth = useAuth();
+    const navigate = useNavigate();
     const hasSidebar = auth.isAuthenticated;
 
     return (
       <div className="app-layout">
         {hasSidebar && <Sidebar />}
         <main className={`main-content ${hasSidebar ? '' : 'no-sidebar'}`}>
+          {hasSidebar && (
+            <div className="page-topbar">
+              <div className="page-topbar__spacer" />
+              <div className="user-welcome">
+                <div className="user-welcome__info">
+                  <span className="user-avatar">👤</span>
+                  <div>
+                    <div className="user-welcome__text">Bem-vindo,</div>
+                    <div className="user-name">{auth.username ?? 'Usuário'}</div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="user-logout"
+                  onClick={() => {
+                    auth.logout();
+                    navigate('/login');
+                  }}
+                >
+                  <span className="logout-icon">←</span>
+                  Sair
+                </button>
+              </div>
+            </div>
+          )}
           <Routes>
             <Route path="/login" element={<Login />} />
 

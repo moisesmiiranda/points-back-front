@@ -23,6 +23,9 @@
   --accent-danger: #ff6b6b;
   --accent-danger-hover: #ff5252;
   --accent-success: #00b894;
+  --button-contrast-bg: rgba(255, 255, 255, 0.16);
+  --button-contrast-color: #ffffff;
+  --button-contrast-border: rgba(255, 255, 255, 0.24);
 
   --border-color: rgba(100, 100, 160, 0.2);
   --border-active: rgba(108, 92, 231, 0.5);
@@ -71,6 +74,9 @@
   --accent-danger: #ff4757;
   --accent-danger-hover: #ff6b81;
   --accent-success: #2ed573;
+  --button-contrast-bg: rgba(0, 0, 0, 0.06);
+  --button-contrast-color: #1e272e;
+  --button-contrast-border: rgba(0, 0, 0, 0.12);
 
   --border-color: rgba(0, 0, 0, 0.08);
   --border-active: rgba(108, 92, 231, 0.4);
@@ -435,6 +441,77 @@ body {
   font-weight: 700;
   color: var(--text-heading);
   letter-spacing: -0.02em;
+}
+
+.page-topbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0 24px;
+}
+
+.user-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.user-welcome__info {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.user-welcome__text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.user-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.user-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--button-contrast-border);
+  background: var(--button-contrast-bg);
+  color: var(--button-contrast-color);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--transition-fast), opacity var(--transition-fast), background var(--transition-fast);
+}
+
+.user-logout:hover {
+  transform: translateY(-1px);
+  opacity: 0.96;
+}
+
+.logout-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page-header p {
