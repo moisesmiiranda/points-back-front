@@ -2,6 +2,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeContext';
 import Sidebar from './components/Sidebar';
 import { ToastProvider } from './components/Toast';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ClientCreate from './pages/clients/ClientCreate';
 import ClientList from './pages/clients/ClientList';
@@ -17,14 +20,18 @@ import PurchaseEdit from './pages/purchases/PurchaseEdit';
 import PurchaseDetails from './pages/purchases/PurchaseDetails';
 
 function App() {
-  return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <ToastProvider>
-        <div className="app-layout">
-          <Sidebar />
-          <main className="main-content">
-            <Routes>
+  function AppContent() {
+    const auth = useAuth();
+    const hasSidebar = auth.isAuthenticated;
+
+    return (
+      <div className="app-layout">
+        {hasSidebar && <Sidebar />}
+        <main className={`main-content ${hasSidebar ? '' : 'no-sidebar'}`}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+
+            <Route element={<PrivateRoute />}>
               <Route path="/" element={<Dashboard />} />
 
               {/* Cadastros */}
@@ -49,11 +56,22 @@ function App() {
               <Route path="/listagens/estabelecimentos/:id" element={<EstablishmentDetails />} />
               <Route path="/listagens/compras" element={<PurchaseList mode="list" />} />
               <Route path="/listagens/compras/:id" element={<PurchaseDetails />} />
-            </Routes>
-          </main>
-        </div>
-      </ToastProvider>
-    </BrowserRouter>
+            </Route>
+          </Routes>
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <ToastProvider>
+            <AppContent />
+          </ToastProvider>
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

@@ -149,6 +149,90 @@ body {
   overflow-x: hidden;
 }
 
+.main-content.no-sidebar {
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Login page centered card */
+.login-page {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  width: 100%;
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  background: var(--gradient-card);
+}
+
+.login-form h2 {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  color: var(--text-heading);
+}
+
+.login-actions,
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.login-options {
+  margin-bottom: 18px;
+}
+
+.remember-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.login-forgot-link {
+  color: var(--accent-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.login-forgot-link:hover {
+  text-decoration: underline;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 1rem;
+}
+
+.password-field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.show-pw {
+  min-width: 98px;
+}
+
+.error {
+  color: var(--accent-danger);
+  margin-bottom: 16px;
+}
+
 .main-content::before {
   content: '';
   position: fixed;
