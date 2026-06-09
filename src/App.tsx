@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './components/ThemeContext';
 import Sidebar from './components/Sidebar';
 import { ToastProvider } from './components/Toast';
 import Dashboard from './pages/Dashboard';
@@ -17,8 +18,9 @@ import PurchaseDetails from './pages/purchases/PurchaseDetails';
 
 function App() {
   return (
-    <BrowserRouter>
-      <ToastProvider>
+    <ThemeProvider>
+      <BrowserRouter>
+        <ToastProvider>
         <div className="app-layout">
           <Sidebar />
           <main className="main-content">
@@ -52,6 +54,7 @@ function App() {
         </div>
       </ToastProvider>
     </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

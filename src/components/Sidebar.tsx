@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useTheme } from './ThemeContext';
 
 interface SidebarGroup {
   label: string;
@@ -34,6 +35,7 @@ const groups: SidebarGroup[] = [
 ];
 
 export default function Sidebar() {
+  const { theme, toggleTheme } = useTheme();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
     Cadastros: true,
     Editar: true,
@@ -85,6 +87,12 @@ export default function Sidebar() {
           </div>
         ))}
       </nav>
+
+      <div className="sidebar-footer">
+        <button className="theme-toggle-btn" onClick={toggleTheme}>
+          {theme === 'dark' ? '☀️ Tema Claro' : '🌙 Tema Escuro'}
+        </button>
+      </div>
     </aside>
   );
 }

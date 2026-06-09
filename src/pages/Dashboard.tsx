@@ -118,18 +118,18 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(100,100,160,0.15)" />
                   <XAxis
                     dataKey="name"
-                    tick={{ fill: '#9090b0', fontSize: 12 }}
+                    tick={{ fill: 'var(--text-secondary)', fontSize: 12 }}
                     angle={-30}
                     textAnchor="end"
                     height={80}
                   />
-                  <YAxis tick={{ fill: '#9090b0', fontSize: 12 }} />
+                  <YAxis tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
                   <Tooltip
                     contentStyle={{
-                      background: 'rgba(22,22,37,0.95)',
-                      border: '1px solid rgba(100,100,160,0.3)',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '8px',
-                      color: '#e8e8f0',
+                      color: 'var(--text-primary)',
                       fontSize: '0.85rem',
                     }}
                     formatter={(value) => [`R$ ${Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 'Total']}
